@@ -12,3 +12,8 @@ Usage instructions will be added here.
 
 My Qoute
 “Make it work, make it right, make it fast.”
+
+##Team 
+Daniel Romero 
+Nyasha Ushewokunze
+Sarah

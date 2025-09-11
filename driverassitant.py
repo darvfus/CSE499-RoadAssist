@@ -57,7 +57,7 @@ def calcular_EAR(puntos):
     return (A + B) / (2.0 * C)
 
 def iniciar_deteccion(nombre_usuario, correo_usuario):
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(1)
     face_mesh = mp.solutions.face_mesh.FaceMesh(refine_landmarks=True)
     tiempo_inicio_cerrados = None
     
