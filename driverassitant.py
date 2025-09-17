@@ -12,8 +12,8 @@ from playsound import playsound
 
 
 # Configuración de correo
-SENDER_EMAIL = "xxxxxxxxxxxxxx"
-PASSWORD = "xxxxxxxxxxxxxx"
+SENDER_EMAIL = "20203mc210@utez.edu.mx"
+PASSWORD = "8a7d56a162l3c11b"
 
 def reproducir_audio():
     try:
@@ -57,7 +57,7 @@ def calcular_EAR(puntos):
     return (A + B) / (2.0 * C)
 
 def iniciar_deteccion(nombre_usuario, correo_usuario):
-    cap = cv2.VideoCapture(1)
+    cap = cv2.VideoCapture(0)
     face_mesh = mp.solutions.face_mesh.FaceMesh(refine_landmarks=True)
     tiempo_inicio_cerrados = None
     
@@ -110,7 +110,7 @@ def iniciar_deteccion(nombre_usuario, correo_usuario):
         
         cv2.imshow("Detección de Ojos", frame)
         
-        if cv2.waitKey(1) & 0xFF == ord('q'):
+        if cv2.waitKey(0) & 0xFF == ord('q'):
             break
     
     cap.release()
