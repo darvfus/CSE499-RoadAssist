@@ -15,8 +15,8 @@ import os
 # =============================
 # CONFIGURACIÓN
 # =============================
-SENDER_EMAIL = "20203mc210@utez.edu.mx"
-PASSWORD = "8a7d56a162l3c11b"
+SENDER_EMAIL = "xxxxxxxxxxx"
+PASSWORD = "xxxxxxxxxxxxxxxxx"
 USUARIOS_FILE = "usuarios.json"
 
 umbral_EAR = 0.2
