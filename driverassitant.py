@@ -9,11 +9,27 @@ from email.mime.multipart import MIMEMultipart
 import tkinter as tk
 from tkinter import messagebox
 from playsound import playsound
+from datetime import datetime
+from typing import Optional
+
+# Import the new email service
+try:
+    from email_service import (
+        EmailServiceManagerImpl, EmailConfig, UserData, AlertData,
+        ProviderType, AuthMethod, AlertType
+    )
+    EMAIL_SERVICE_AVAILABLE = True
+except ImportError:
+    print("Email service not available, using basic email functionality")
+    EMAIL_SERVICE_AVAILABLE = False
 
 
 # Configuración de correo
 SENDER_EMAIL = "20203mc210@utez.edu.mx"
 PASSWORD = "8a7d56a162l3c11b"
+
+# Global email service instance
+email_service: Optional[EmailServiceManagerImpl] = None
 
 def reproducir_audio():
     try:
@@ -32,6 +48,74 @@ def obtener_signos_vitales():
     return frecuencia_cardiaca, oxigenacion
 
 def enviar_correo(nombre_usuario, correo_usuario):
+    """
+    Enhanced email function that uses EmailServiceManager if available,
+    otherwise falls back to basic email functionality for backward compatibility.
+    """
+    global email_service
+    
+    # Try to use enhanced email service first
+    if EMAIL_SERVICE_AVAILABLE and email_service:
+        try:
+            return enviar_correo_mejorado(nombre_usuario, correo_usuario)
+        except Exception as e:
+            print(f"Error with enhanced email service, falling back to basic: {e}")
+    
+    # Fallback to basic email functionality
+    return enviar_correo_basico(nombre_usuario, correo_usuario)
+
+def enviar_correo_mejorado(nombre_usuario: str, correo_usuario: str) -> bool:
+    """
+    Send enhanced email using the new EmailServiceManager
+    """
+    global email_service
+    
+    if not email_service:
+        print("Email service not initialized")
+        return False
+    
+    try:
+        # Get vital signs
+        frecuencia_cardiaca, oxigenacion = obtener_signos_vitales()
+        
+        # Create user data
+        user_data = UserData(
+            name=nombre_usuario,
+            email=correo_usuario,
+            user_id=f"driver_{hash(nombre_usuario) % 10000}",
+            preferences={"language": "es", "timezone": "UTC"}
+        )
+        
+        # Create alert data
+        alert_data = AlertData(
+            alert_type=AlertType.DROWSINESS,
+            timestamp=datetime.now(),
+            heart_rate=frecuencia_cardiaca,
+            oxygen_saturation=float(oxigenacion),
+            additional_data={
+                "detection_method": "mediapipe_face_mesh",
+                "system_version": "driverassistant_v1.0"
+            }
+        )
+        
+        # Send email through service manager
+        result = email_service.send_alert_email(user_data, alert_data)
+        
+        if result.success:
+            print(f"Email enviado exitosamente: {result.message}")
+            return True
+        else:
+            print(f"Error enviando email: {result.message}")
+            return False
+            
+    except Exception as e:
+        print(f"Error en envío de email mejorado: {e}")
+        return False
+
+def enviar_correo_basico(nombre_usuario: str, correo_usuario: str) -> bool:
+    """
+    Basic email function for backward compatibility
+    """
     frecuencia_cardiaca, oxigenacion = obtener_signos_vitales()
     body = f"El usuario {nombre_usuario} se ha dormido.\n\nSignos vitales:\nFrecuencia Cardiaca: {frecuencia_cardiaca} BPM\nOxigenación: {oxigenacion}%"
 
@@ -46,9 +130,52 @@ def enviar_correo(nombre_usuario, correo_usuario):
         server.login(SENDER_EMAIL, PASSWORD)
         server.sendmail(SENDER_EMAIL, correo_usuario, message.as_string())
         server.quit()
-        print("Correo enviado correctamente.")
+        print("Correo básico enviado correctamente.")
+        return True
     except Exception as e:
-        print(f"Error al enviar correo: {e}")
+        print(f"Error al enviar correo básico: {e}")
+        return False
+
+def inicializar_servicio_email():
+    """Initialize the email service with basic configuration"""
+    global email_service
+    
+    if not EMAIL_SERVICE_AVAILABLE:
+        print("Email service not available, using basic email")
+        return False
+    
+    try:
+        # Create email service manager
+        email_service = EmailServiceManagerImpl()
+        
+        # Create basic email configuration
+        email_config = EmailConfig(
+            provider=ProviderType.GMAIL,
+            smtp_server="smtp.gmail.com",
+            smtp_port=465,
+            use_tls=False,  # Using SSL instead
+            sender_email=SENDER_EMAIL,
+            sender_password=PASSWORD,
+            auth_method=AuthMethod.APP_PASSWORD,
+            timeout=30,
+            max_retries=3
+        )
+        
+        # Initialize service
+        success = email_service.initialize(email_config)
+        
+        if success:
+            print("Email service initialized successfully")
+            return True
+        else:
+            print("Failed to initialize email service, using basic email")
+            email_service = None
+            return False
+            
+    except Exception as e:
+        print(f"Error initializing email service: {e}")
+        email_service = None
+        return False
 
 def calcular_EAR(puntos):
     A = np.linalg.norm(puntos[1] - puntos[5])
@@ -128,13 +255,23 @@ def iniciar_programa():
     ventana.destroy()  # Cerrar ventana
     iniciar_deteccion(nombre_usuario, correo_usuario)
 
+# Initialize email service on startup
+print("Initializing email service...")
+inicializar_servicio_email()
+
 ventana = tk.Tk()
-ventana.title("Detección de Sueño")
-ventana.geometry("400x300")
+ventana.title("Detección de Sueño - Versión Mejorada")
+ventana.geometry("400x350")
 ventana.configure(bg="#1e1e2e")
 
 label_titulo = tk.Label(ventana, text="Sistema de Detección de Sueño", font=("Arial", 14, "bold"), fg="white", bg="#1e1e2e")
 label_titulo.pack(pady=10)
+
+# Show email service status
+email_status = "Email Service: Activo" if email_service else "Email Service: Básico"
+status_color = "green" if email_service else "orange"
+status_label = tk.Label(ventana, text=email_status, font=("Arial", 10), fg=status_color, bg="#1e1e2e")
+status_label.pack(pady=5)
 
 label_nombre = tk.Label(ventana, text="Nombre:", font=("Arial", 12), fg="white", bg="#1e1e2e")
 label_nombre.pack()

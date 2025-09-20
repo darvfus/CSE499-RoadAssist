@@ -1,0 +1,17 @@
+{
+    "name": "Vital Signs Alert",
+    "description": "Alert template for abnormal vital signs detection",
+    "category": "health_alert",
+    "priority": "high",
+    "required_variables": [
+        "user_name",
+        "timestamp",
+        "alert_type",
+        "system_name",
+        "heart_rate",
+        "oxygen_saturation"
+    ],
+    "optional_variables": [],
+    "created_by": "system",
+    "version": "1.0"
+}

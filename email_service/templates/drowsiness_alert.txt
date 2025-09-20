@@ -1,0 +1,36 @@
+Subject: URGENT: Drowsiness Alert - ${user_name}
+
+Dear ${user_name},
+
+This is an automated alert from the ${system_name}.
+
+DROWSINESS DETECTED at ${timestamp}
+
+Alert Details:
+- Alert Type: ${alert_type}
+- Detection Time: ${timestamp}
+- User: ${user_name}
+
+Vital Signs (if available):
+- Heart Rate: ${heart_rate} BPM
+- Oxygen Saturation: ${oxygen_saturation}%
+
+IMMEDIATE ACTION REQUIRED:
+Please take a break from driving immediately. Find a safe place to stop and rest.
+
+Safety Recommendations:
+1. Pull over to a safe location
+2. Take a 15-20 minute break
+3. Consider switching drivers if possible
+4. Ensure you are fully alert before continuing
+
+This alert was generated automatically by your Driver Assistant System to help ensure your safety.
+
+If you continue to receive these alerts, please consult with a healthcare professional.
+
+Stay Safe,
+Driver Assistant System
+
+---
+This is an automated message. Please do not reply to this email.
+System Time: ${timestamp}

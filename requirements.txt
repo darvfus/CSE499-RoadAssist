@@ -1,2 +1,15 @@
 Flask
 requests
+opencv-python
+numpy
+pygame
+cryptography
+keyring
+# mediapipe - install manually if needed for face detection
+# playsound - has compatibility issues, using pygame for audio instead
+
+# Email service dependencies
+# smtplib, email, ssl are built-in Python modules
+# cryptography - already included above for secure credential storage
+# keyring - for credential management
+# requests - already included above for OAuth2 authentication

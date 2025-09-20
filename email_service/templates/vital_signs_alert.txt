@@ -1,0 +1,38 @@
+Subject: Health Alert: Vital Signs Monitoring - ${user_name}
+
+Dear ${user_name},
+
+The ${system_name} has detected concerning vital signs readings.
+
+VITAL SIGNS ALERT at ${timestamp}
+
+Alert Details:
+- Alert Type: ${alert_type}
+- Detection Time: ${timestamp}
+- User: ${user_name}
+
+Current Vital Signs:
+- Heart Rate: ${heart_rate} BPM
+- Oxygen Saturation: ${oxygen_saturation}%
+
+RECOMMENDED ACTIONS:
+1. Check your current physical condition
+2. Take deep breaths and try to relax
+3. If symptoms persist, consider stopping driving
+4. Seek medical attention if readings remain abnormal
+
+Safety Guidelines:
+- Normal heart rate: 60-100 BPM
+- Normal oxygen saturation: 95-100%
+- If you feel unwell, please stop driving immediately
+
+This monitoring system is designed to help maintain your health and safety while driving.
+
+If you have concerns about these readings, please consult with your healthcare provider.
+
+Best regards,
+Driver Assistant System
+
+---
+This is an automated health monitoring message.
+System Time: ${timestamp}

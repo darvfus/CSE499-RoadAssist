@@ -1,0 +1,18 @@
+{
+    "name": "Drowsiness Alert",
+    "description": "Alert template for drowsiness detection events",
+    "category": "safety_alert",
+    "priority": "high",
+    "required_variables": [
+        "user_name",
+        "timestamp",
+        "alert_type",
+        "system_name"
+    ],
+    "optional_variables": [
+        "heart_rate",
+        "oxygen_saturation"
+    ],
+    "created_by": "system",
+    "version": "1.0"
+}

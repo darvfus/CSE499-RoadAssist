@@ -1,0 +1,14 @@
+{
+    "name": "System Test",
+    "description": "Template for testing email system functionality",
+    "category": "system_test",
+    "priority": "normal",
+    "required_variables": [
+        "user_name",
+        "timestamp",
+        "system_name"
+    ],
+    "optional_variables": [],
+    "created_by": "system",
+    "version": "1.0"
+}

@@ -1,0 +1,11 @@
+{
+    "provider": "gmail",
+    "smtp_server": "smtp.gmail.com",
+    "smtp_port": 587,
+    "use_tls": true,
+    "sender_email": "your-email@gmail.com",
+    "sender_password": "your-app-password",
+    "auth_method": "app_password",
+    "timeout": 30,
+    "max_retries": 3
+}

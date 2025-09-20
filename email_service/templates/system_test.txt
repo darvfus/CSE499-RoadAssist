@@ -1,0 +1,35 @@
+Subject: Email System Test - ${system_name}
+
+Hello ${user_name},
+
+This is a test email from the ${system_name} to verify that email functionality is working correctly.
+
+Test Details:
+- Test Time: ${timestamp}
+- User: ${user_name}
+- System: ${system_name}
+
+If you receive this email, your email configuration is working properly.
+
+Test Information:
+- Email provider connection: Successful
+- Authentication: Verified
+- Template rendering: Working
+- Delivery system: Operational
+
+This test email confirms that:
+✓ SMTP connection is established
+✓ Authentication credentials are valid
+✓ Email templates are rendering correctly
+✓ Email delivery system is functional
+
+You can now be confident that safety alerts will be delivered successfully.
+
+Thank you for using the Driver Assistant System.
+
+Best regards,
+Driver Assistant System
+
+---
+This is an automated test message.
+Test completed at: ${timestamp}
