@@ -9,6 +9,8 @@ from email.mime.multipart import MIMEMultipart
 import tkinter as tk
 from tkinter import messagebox
 from playsound import playsound
+from storage import init_db, log_event # import database and log_event
+
 
 
 # Configuración de correo
@@ -92,14 +94,28 @@ def iniciar_deteccion(nombre_usuario, correo_usuario):
                     
                     if tiempo_cerrados >= umbral_tiempo_dormido:
                         print("¡ALERTA! Persona dormida")
-                        # Reproducir el nuevo archivo de audio
+                        
+                        # ✅ Save event in database
+                        frecuencia_cardiaca, oxigenacion = obtener_signos_vitales()
+                        log_event(
+                            nombre_usuario,
+                            correo_usuario,
+                            "Drowsiness Detected",
+                            frecuencia_cardiaca,
+                            oxigenacion
+                        )
+
+                        # ✅ Play alarm sound
                         try:
-                            playsound("C:\\Users\\Daniel Romero\\Desktop\\neural\\alarma.mp3")  # Ruta correcta del archivo harry.mp3
+                            playsound("C:\\Users\\Daniel Romero\\Desktop\\neural\\alarma.mp3")
                             print("Audio reproducido con éxito.")
                         except Exception as e:
                             print(f"Error al reproducir el archivo: {e}")
+
+                        # ✅ Send alert email
                         enviar_correo(nombre_usuario, correo_usuario)
                         tiempo_inicio_cerrados = None
+
                 else:
                     ojos_cerrados = False
                     tiempo_inicio_cerrados = None
@@ -116,13 +132,27 @@ def iniciar_deteccion(nombre_usuario, correo_usuario):
     cap.release()
     cv2.destroyAllWindows()
 
+
+# def iniciar_programa():
+#     nombre_usuario = entry_nombre.get()
+#     correo_usuario = entry_correo.get()
+    
+#     if not nombre_usuario or not correo_usuario:
+#         messagebox.showwarning("Error", "Por favor, complete todos los campos.")
+#         return
+
+# Replace the above with this code to initialize the database before starting detection
+
 def iniciar_programa():
+    init_db()  # ✅ initialize database before starting detection
+
     nombre_usuario = entry_nombre.get()
     correo_usuario = entry_correo.get()
     
     if not nombre_usuario or not correo_usuario:
         messagebox.showwarning("Error", "Por favor, complete todos los campos.")
         return
+
     
     reproducir_audio()  # Llamamos a la función para reproducir el audio
     ventana.destroy()  # Cerrar ventana

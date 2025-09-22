@@ -1,2 +1,27 @@
-Flask
-requests
+✅ Libraries your project already uses
+
+From your driverassistant.py + database sync, you need:
+opencv-python
+mediapipe
+numpy
+playsound
+tkinter        # comes with Python, no need to install separately
+winsound       # built into Python on Windows
+smtplib        # built into Python
+email          # built into Python
+
+✅ Database requirement
+
+We are using SQLite3:
+
+It is included with Python by default (sqlite3 module).
+
+✅ No extra installation needed.
+
+✅ Final requirements.txt
+
+So your requirements.txt for detection + storage looks like this:
+opencv-python
+mediapipe
+numpy
+playsound
