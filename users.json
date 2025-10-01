@@ -1,0 +1,9 @@
+{
+    "Peters": {
+        "email": "example1223@gmail.com",
+        "age": 36,
+        "gender": "Female",
+        "height": 1.8,
+        "weight": 210.0
+    }
+}
