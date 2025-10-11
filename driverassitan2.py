@@ -5,28 +5,23 @@ import cv2
 import time
 import mediapipe as mp
 import numpy as np
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
 import json
 import os
 from playsound import playsound
 import datetime
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
+import mailtrap as mt
 
 # =============================
-# CONFIGURATION
+# CONFIGURACIÓN
 # =============================
-SENDER_EMAIL = "20203mc210@utez.edu.mx"
-PASSWORD = "YOUR_APP_PASSWORD"
 USERS_FILE = "users.json"
-
 EAR_THRESHOLD = 0.2
 SLEEP_THRESHOLD_TIME = 3
 
 # =============================
-# USER MANAGEMENT
+# GESTIÓN DE USUARIOS
 # =============================
 def load_users():
     if os.path.exists(USERS_FILE):
@@ -44,10 +39,10 @@ def save_users(users):
         json.dump(users, f, indent=4, ensure_ascii=False)
 
 users = load_users()
-sleep_events = []  # List to record sleep events
+sleep_events = []  # historial de eventos de sueño
 
 # =============================
-# HELPER FUNCTIONS
+# FUNCIONES AUXILIARES
 # =============================
 def play_audio(audio_path):
     try:
@@ -63,23 +58,40 @@ def get_vital_signs():
     return heart_rate, respiration, blood_pressure, temperature
 
 def send_email(user_name, user_email):
+    """Envía correo con Mailtrap cuando el usuario se duerme"""
     heart_rate, respiration, bp, temp = get_vital_signs()
-    body = f"User {user_name} has fallen asleep.\n\nVital Signs:\nHeart Rate: {heart_rate} BPM\nRespiration: {respiration} rpm\nBlood Pressure: {bp}\nTemperature: {temp}°C"
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    message = MIMEMultipart()
-    message["From"] = SENDER_EMAIL
-    message["To"] = user_email
-    message["Subject"] = "Alert! Sleep Detected"
-    message.attach(MIMEText(body, "plain"))
+    subject = f"Sleep Alert - {user_name}"
+    body = f"""
+    ALERTA DE SOMNOLENCIA
+
+    Usuario: {user_name}
+    Hora detectada: {timestamp}
+
+    Signos vitales:
+    ❤️ Heart rate: {heart_rate} BPM
+    🌬️ Respiration rate: {respiration} breaths/min
+    💉 Blood pressure: {bp} mmHg
+    🌡️ Body temperature: {temp} °C
+
+    El sistema ha detectado que el usuario se durmió durante la sesión.
+    """
 
     try:
-        server = smtplib.SMTP_SSL("smtp.gmail.com", 465)
-        server.login(SENDER_EMAIL, PASSWORD)
-        server.sendmail(SENDER_EMAIL, user_email, message.as_string())
-        server.quit()
-        print("Email sent successfully.")
+        mail = mt.Mail(
+            sender=mt.Address(email="hello@demomailtrap.co", name="Sleep Detection System"),
+            to=[mt.Address(email=user_email)],
+            subject=subject,
+            text=body,
+            category="Sleep Alert"
+        )
+
+        client = mt.MailtrapClient(token="09dac62be08176ae806cae2291cda74e")
+        response = client.send(mail)
+        print("✅ Email enviado correctamente:", response)
     except Exception as e:
-        print(f"Error sending email: {e}")
+        print(f"❌ Error al enviar correo: {e}")
 
 def calculate_EAR(points):
     A = np.linalg.norm(points[1] - points[5])
@@ -88,7 +100,7 @@ def calculate_EAR(points):
     return (A + B) / (2.0 * C)
 
 # =============================
-# CALCULATIONS
+# CÁLCULOS
 # =============================
 def calculate_bmi(weight, height):
     return weight / (height ** 2)
@@ -112,7 +124,7 @@ def calculate_metabolic_age(age, bmi, gender):
     return age + int((bmi - 22)) + adjustment
 
 # =============================
-# SLEEP DETECTION
+# DETECCIÓN DE SUEÑO
 # =============================
 stop_flag = False
 reset_flag = False
@@ -171,7 +183,7 @@ def start_detection(user_name, user_email):
     cv2.destroyAllWindows()
 
 # =============================
-# VITAL SIGNS GRAPH
+# GRÁFICA DE SIGNOS VITALES
 # =============================
 def show_graph():
     plt.ion()
@@ -202,7 +214,7 @@ def show_graph():
     plt.close(fig)
 
 # =============================
-# GUI
+# INTERFAZ GRÁFICA
 # =============================
 def register_window():
     def register():
@@ -298,8 +310,6 @@ Sleep Events History:
     for event in sleep_events:
         report += f"{event}\n"
 
-    report += "\nVital Signs History:\n"
-
     with open("user_report.txt", "w", encoding="utf-8") as f:
         f.write(report)
 
@@ -307,7 +317,7 @@ Sleep Events History:
     root.destroy()
 
 # =============================
-# MAIN WINDOW
+# VENTANA PRINCIPAL
 # =============================
 root = tk.Tk()
 root.title("Sleep Detection System")
