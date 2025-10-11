@@ -13,6 +13,16 @@ This project provides a road assistance system designed to enhance driver safety
 *   **User Management:** Allows registration and management of user profiles, including personal information and emergency contacts.
 *   **Data Analysis and Visualization:** Provides tools for analyzing and visualizing collected data, such as vital signs and drowsiness patterns.
 
+## Technologies Used
+
+*   **Python:** The primary programming language used for developing the road assistance system.
+*   **SQLite:** Used for storing user data and other application-related information.
+*   **OpenCV:** Used for facial analysis and drowsiness detection.
+*   **SciPy:** Used for signal processing and data analysis.
+*   **Tkinter:** Used for creating the graphical user interface (GUI).
+*   **PyAudio:** Used for playing audio alerts.
+*   **smtplib:** Used for sending email notifications.
+
 ## Setup
 
 1.  **Clone the repository:**
