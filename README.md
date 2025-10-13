@@ -82,4 +82,4 @@ This project provides a road assistance system designed to enhance driver safety
 
 Daniel Romero
 Nyasha Ushewokunze
-Sarah
+Sarah Imarhenakhue Ogiefa
